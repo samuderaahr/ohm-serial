@@ -6,83 +6,42 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using ohm_server.Properties;
 
 namespace ohm_server
 {
-    public partial class Form1 : Form
+    public partial class ServerGUI : Form
     {
 
         protected StatusBar mainStatusBar = new StatusBar();
         protected StatusBarPanel statusPanel = new StatusBarPanel();
-        
-        public Form1()
+        //  The NotifyIcon object
+        private System.Windows.Forms.NotifyIcon notifyIcon;
+
+        public ServerGUI()
         {
             InitializeComponent();
 
-            statusPanel.BorderStyle = StatusBarPanelBorderStyle.Sunken;
-            statusPanel.Text = "READY";
-            statusPanel.AutoSize = StatusBarPanelAutoSize.Spring;
-            mainStatusBar.Panels.Add(statusPanel);
-
-            mainStatusBar.ShowPanels = true;
-            this.Controls.Add(mainStatusBar);
-
-            serialPort.BaudRate = 9600;
-            intervalTimer.Enabled = true;
-            intervalTimer.Interval = 100;
-
-            COMPort.Enabled = true;
-
-            string[] ports = SerialPort.GetPortNames();
-            int index = 0;
-            Dictionary<Int32, string> COMPortItems = new Dictionary<int, string>();
-
-            foreach (string port in ports)
-            {
-                COMPortItems.Add(index++, port);
-            }
-
-            try
-            {
-                COMPort.DataSource = new BindingSource(COMPortItems, null);
-                COMPort.DisplayMember = "Value";
-                COMPort.ValueMember = "Key";
-
-                COMPort.SelectedIndex = 0;
-            }
-
-            catch (ArgumentNullException) { }
-
-            //Dictionary<string, string> COMPortItems = new Dictionary<string, string>();
-            //COMPortItems.Add("1", "COM3");
-            //COMPortItems.Add("2", "COM4");
-            //COMPortItems.Add("3", "COM5");
-
-            //COMPort.DataSource = new BindingSource(COMPortItems, null);
-            //COMPort.DisplayMember = "Value";
-            //COMPort.ValueMember = "Key";
-
-            //COMPort.SelectedIndex = 1;
+            //this.notifyIcon.Icon = Resources.oshw;
+            //existing controls init sequence
+            InitializeControls();
         }
 
         private void COMPort_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (COMPort.SelectedIndex)
-            {
-                case 0 : break;
-                case 1 : break;
-                case 2 : break;
-            }
+            string PortValue = ((KeyValuePair<int, string>)COMPort.SelectedItem).Value;
+
+            serialPort.PortName = PortValue;
         }
 
         private void BaudRate_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            serialPort.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
         }
 
         private void SendInterval_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            intervalTimer.Interval = Convert.ToInt32(SendInterval.SelectedIndex.ToString());
         }
 
         private void COMPort_DropDown(object sender, EventArgs e)
@@ -102,7 +61,10 @@ namespace ohm_server
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            serialPort.PortName = COMPort.SelectedIndex.ToString();
+            if (!serialPort.IsOpen)
+                serialPort.Open();
+
+            statusPanel.Text = "TRANSMISSION STARTED";
         }
 
         private void StopButton_Click(object sender, EventArgs e)
@@ -114,7 +76,79 @@ namespace ohm_server
         {
             intervalTimer.Stop();
             serialPort.Close();
-            
+
+            statusPanel.Text = "TRANSMISSION STOPPED";
+        }
+
+        private void InitializeControls()
+        {
+            statusPanel.BorderStyle = StatusBarPanelBorderStyle.Sunken;
+            statusPanel.AutoSize = StatusBarPanelAutoSize.Spring;
+            mainStatusBar.Panels.Add(statusPanel);
+
+            mainStatusBar.ShowPanels = true;
+            this.Controls.Add(mainStatusBar);
+            statusPanel.Text = "READY";
+
+            intervalTimer.Enabled = true;
+            intervalTimer.Interval = 100;
+
+            string[] ports = SerialPort.GetPortNames();
+
+            //if no serial, program cannot continue
+            //TODO: Make serial refresh
+            if (ports == null || ports.Length == 0)
+                statusPanel.Text = "NO COM PORTS DETECTED. PLEASE RESTART PROGRAM.";
+
+            //if com port detected, assumed successful init
+            else
+            {
+                Dictionary<Int32, string> COMPortItems = new Dictionary<int, string>();
+                int index = 0;
+
+                foreach (string port in ports)
+                {
+                    COMPortItems.Add(index++, port);
+                }
+
+                try
+                {
+                    COMPort.DataSource = new BindingSource(COMPortItems, null);
+                    COMPort.DisplayMember = "Value";
+                    COMPort.ValueMember = "Key";
+                }
+
+                catch (ArgumentException) { }
+
+                COMPort.SelectedIndex = 0;      //first com port default
+                BaudRate.SelectedIndex = 4;     //predefault data. 57600 default
+                SendInterval.SelectedIndex = 4; //predefined data. 1000ms interval default
+
+                string PortValue = ((KeyValuePair<int, string>)COMPort.SelectedItem).Value;
+
+                serialPort.PortName = PortValue;
+                serialPort.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
+                intervalTimer.Interval = Convert.ToInt32(SendInterval.SelectedItem.ToString());
+            }
+        }
+
+        private void ImportStatusForm_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                notifyIcon.Icon = Resources.oshw;
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(3000);
+                this.ShowInTaskbar = false;
+            }
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            notifyIcon.Icon = Resources.oshw;
+            this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
+            notifyIcon.Visible = false;
         }
     }
 
