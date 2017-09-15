@@ -21,7 +21,6 @@ namespace ohm_server
         public ServerGUI()
         {
             InitializeComponent();
-
             //this.notifyIcon.Icon = Resources.oshw;
             //existing controls init sequence
             InitializeControls();
