@@ -15,13 +15,12 @@ namespace ohm_server
 
         protected StatusBar mainStatusBar = new StatusBar();
         protected StatusBarPanel statusPanel = new StatusBarPanel();
-        //  The NotifyIcon object
-        private System.Windows.Forms.NotifyIcon notifyIcon;
 
         public ServerGUI()
         {
             InitializeComponent();
-            //this.notifyIcon.Icon = Resources.oshw;
+            this.Icon = Resources.oshw;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             //existing controls init sequence
             InitializeControls();
         }
@@ -138,17 +137,6 @@ namespace ohm_server
                 serialPort.PortName = PortValue;
                 serialPort.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
                 intervalTimer.Interval = Convert.ToInt32(SendInterval.SelectedItem.ToString());
-            }
-        }
-
-        private void ImportStatusForm_Resize(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                notifyIcon.Icon = Resources.oshw;
-                notifyIcon.Visible = true;
-                notifyIcon.ShowBalloonTip(3000);
-                this.ShowInTaskbar = false;
             }
         }
     }
