@@ -60,10 +60,20 @@ namespace ohm_server
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            if (!serialPort.IsOpen)
-                serialPort.Open();
+            try
+            {
+                if (!serialPort.IsOpen)
+                    serialPort.Open();
 
-            statusPanel.Text = "TRANSMISSION STARTED";
+                serialPort.WriteLine("WHATSUP MOTHAFUCKA");
+
+                statusPanel.Text = "Transmission Started | Port: " + serialPort.PortName + " | Baud: " + serialPort.BaudRate;
+            }
+
+            catch (UnauthorizedAccessException)
+            {
+                statusPanel.Text "Another app is using the COM Port";
+            }
         }
 
         private void StopButton_Click(object sender, EventArgs e)
@@ -76,7 +86,7 @@ namespace ohm_server
             intervalTimer.Stop();
             serialPort.Close();
 
-            statusPanel.Text = "TRANSMISSION STOPPED";
+            statusPanel.Text = "Transmission Stopped";
         }
 
         private void InitializeControls()
@@ -87,7 +97,7 @@ namespace ohm_server
 
             mainStatusBar.ShowPanels = true;
             this.Controls.Add(mainStatusBar);
-            statusPanel.Text = "READY";
+            statusPanel.Text = "Ready.";
 
             intervalTimer.Enabled = true;
             intervalTimer.Interval = 100;
@@ -97,7 +107,7 @@ namespace ohm_server
             //if no serial, program cannot continue
             //TODO: Make serial refresh
             if (ports == null || ports.Length == 0)
-                statusPanel.Text = "NO COM PORTS DETECTED. PLEASE RESTART PROGRAM.";
+                statusPanel.Text = "No COM Port detected. Please restart program.";
 
             //if com port detected, assumed successful init
             else
@@ -140,14 +150,6 @@ namespace ohm_server
                 notifyIcon.ShowBalloonTip(3000);
                 this.ShowInTaskbar = false;
             }
-        }
-
-        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            notifyIcon.Icon = Resources.oshw;
-            this.WindowState = FormWindowState.Normal;
-            this.ShowInTaskbar = true;
-            notifyIcon.Visible = false;
         }
     }
 
