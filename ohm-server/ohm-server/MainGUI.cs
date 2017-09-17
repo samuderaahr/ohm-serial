@@ -72,7 +72,7 @@ namespace ohm_server
 
             catch (UnauthorizedAccessException)
             {
-                statusPanel.Text "Another app is using the COM Port";
+                statusPanel.Text = "Another app is using the COM Port";
             }
         }
 
