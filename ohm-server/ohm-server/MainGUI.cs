@@ -21,7 +21,8 @@ namespace ohm_server
             InitializeComponent();
             this.Icon = Resources.oshw;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            //existing controls init sequence
+
+            //Comboboxes and buttons init sequence
             InitializeControls();
         }
 
@@ -139,6 +140,32 @@ namespace ohm_server
                 intervalTimer.Interval = Convert.ToInt32(SendInterval.SelectedItem.ToString());
             }
         }
+
+        private void ServerGUI_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.ShowInTaskbar = false;
+                notifyIcon.Visible = true;
+            }
+        }
+
+
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
+            notifyIcon.Visible = false;
+        }
+
+        private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
+            notifyIcon.Visible = false;
+        }
+
     }
 
     public class ComboboxItem

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServerGUI));
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.intervalTimer = new System.Windows.Forms.Timer(this.components);
             this.StopButton = new System.Windows.Forms.Button();
@@ -39,6 +40,7 @@
             this.SendInterval = new System.Windows.Forms.ComboBox();
             this.BaudRate = new System.Windows.Forms.ComboBox();
             this.COMPort = new System.Windows.Forms.ComboBox();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.SuspendLayout();
             // 
             // serialPort
@@ -144,6 +146,17 @@
             this.COMPort.DropDown += new System.EventHandler(this.COMPort_DropDown);
             this.COMPort.SelectedIndexChanged += new System.EventHandler(this.COMPort_SelectedIndexChanged);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon.BalloonTipText = "Double-click to Restore";
+            this.notifyIcon.BalloonTipTitle = "Minimized to Tray";
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "OHM-Server";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            // 
             // ServerGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -160,6 +173,7 @@
             this.MaximizeBox = false;
             this.Name = "ServerGUI";
             this.Text = "OHM-Serial v0.1";
+            this.Resize += new System.EventHandler(this.ServerGUI_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,6 +191,7 @@
         private System.Windows.Forms.ComboBox SendInterval;
         private System.Windows.Forms.ComboBox BaudRate;
         private System.Windows.Forms.ComboBox COMPort;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 
