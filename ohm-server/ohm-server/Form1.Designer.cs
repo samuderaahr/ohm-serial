@@ -47,6 +47,10 @@
             // 
             this.serialPort.BaudRate = 57600;
             // 
+            // intervalTimer
+            // 
+            this.intervalTimer.Tick += new System.EventHandler(this.intervalTimer_Tick);
+            // 
             // StopButton
             // 
             this.StopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -155,7 +159,6 @@
             this.notifyIcon.Text = "OHM-Server";
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
-            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
             // ServerGUI
             // 

@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using OpenHardwareMonitor.Collections;
 using ohm_server.Properties;
 
 namespace ohm_server
@@ -16,6 +17,23 @@ namespace ohm_server
         protected StatusBar mainStatusBar = new StatusBar();
         protected StatusBarPanel statusPanel = new StatusBarPanel();
 
+        //initialization of hardware support on computer object via OHM Lib
+        private OpenHardwareMonitor.Hardware.Computer myComputer =
+            new OpenHardwareMonitor.Hardware.Computer();
+
+        //persistent variables
+        public string totalDRAM = "0000";
+        public string totalVRAM = "0000";
+
+        //changing variables
+        public string cpuTemp;
+        public string gpuTemp;
+        public string hddTemp;
+        public string gpuLoad;
+        public string cpuLoad;
+        public string dramFree;
+        public string vramFree;
+
         public ServerGUI()
         {
             InitializeComponent();
@@ -24,7 +42,102 @@ namespace ohm_server
 
             //Comboboxes and buttons init sequence
             InitializeControls();
+            //Sensor initialization sequence
+            InitializeSensors();
+            //TODO: Get Human-readable Hardware Names and Specs
+            GetHardwareNames();
         }
+
+        private void InitializeSensors()
+        {
+            myComputer.CPUEnabled = true;
+            myComputer.GPUEnabled = true;
+            myComputer.HDDEnabled = true;
+            myComputer.RAMEnabled = true;
+            myComputer.Open();
+        }
+
+        private void GetHardwareNames()
+        {
+ 	        
+        }
+
+        private string ReadSensor(string sensorName)
+        {
+            //iterate thru each hardware via IHardware iterables
+            foreach (OpenHardwareMonitor.Hardware.IHardware myHardware in myComputer.Hardware)
+            {
+                foreach (OpenHardwareMonitor.Hardware.ISensor mySensor in myHardware.Sensors)
+                {
+                    if (sensorName == mySensor.Name)
+                    {
+                        if (mySensor.Value != null)
+                        {
+                            int temp = (int)mySensor.Value;
+                            return temp.ToString();
+                        }
+                    }
+                }
+            }
+
+            return String.Empty;
+        }
+
+        //    myHardware.Update();
+        //    foreach (OpenHardwareMonitor.Hardware.ISensor mySensor in myHardware.Sensors)
+        //    {
+        //        int temp = (int)mySensor.Value;
+        //        if (mySensor.SensorType == OpenHardwareMonitor.Hardware.SensorType.Temperature)
+        //        {
+        //            if (temp != null)
+        //            {
+        //                switch (mySensor.Name)
+        //                {
+        //                    case "CPU Package":
+        //                        cpuTemp = temp.ToString().PadLeft(3, '0');
+        //                        break;
+        //                    case "GPU Core":
+        //                        gpuTemp = temp.ToString().PadLeft(3, '0');
+        //                        break;
+        //                    case "Temperature":
+        //                        hddTemp = temp.ToString().PadLeft(3, '0');
+        //                        break;
+        //                }
+        //            }
+        //        }
+
+        //        if (mySensor.SensorType == OpenHardwareMonitor.Hardware.SensorType.Load)
+        //        {
+        //            if (temp != null)
+        //            {
+        //                switch (mySensor.Name)
+        //                {
+        //                    case "CPU Total":
+        //                        cpuLoad = temp.ToString().PadLeft(3, '0');
+        //                        break;
+        //                    case "GPU Core":
+        //                        gpuLoad = temp.ToString().PadLeft(3, '0');
+        //                        break;
+        //                }
+        //            }
+        //        }
+
+        //        if (mySensor.SensorType == OpenHardwareMonitor.Hardware.SensorType.Data)
+        //        {
+        //            if (temp != null)
+        //            {
+        //                switch (mySensor.Name)
+        //                {
+        //                    case "Available Memory":
+        //                        dramFree = temp.ToString().PadLeft(3, '0');
+        //                        break;
+        //                    case "GPU Memory Free":
+        //                        vramFree = temp.ToString().PadLeft(3, '0');
+        //                        break;
+        //                }
+        //            }
+        //        }
+        //    }
 
         private void COMPort_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -68,6 +181,8 @@ namespace ohm_server
                 serialPort.WriteLine("WHATSUP MOTHAFUCKA");
 
                 statusPanel.Text = "Transmission Started | Port: " + serialPort.PortName + " | Baud: " + serialPort.BaudRate;
+
+                intervalTimer.Start();
             }
 
             catch (UnauthorizedAccessException)
@@ -80,7 +195,7 @@ namespace ohm_server
         {
             Stop();
         }
-          
+
         private void Stop()
         {
             intervalTimer.Stop();
@@ -150,20 +265,27 @@ namespace ohm_server
             }
         }
 
-
-
-        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
             notifyIcon.Visible = false;
         }
 
-        private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
+        private void intervalTimer_Tick(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Normal;
-            this.ShowInTaskbar = true;
-            notifyIcon.Visible = false;
+            sendString();
+
+            // update hardware AFTER successfully send string
+            foreach (OpenHardwareMonitor.Hardware.IHardware myHardware in myComputer.Hardware)
+            {
+                myHardware.Update();
+            }
+        }
+
+        private void sendString()
+        {
+            
         }
 
     }
