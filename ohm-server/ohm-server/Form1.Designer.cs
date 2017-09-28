@@ -47,6 +47,10 @@
             this.cpuTempLabel = new System.Windows.Forms.Label();
             this.gpuTempLabel = new System.Windows.Forms.Label();
             this.hddTempLabel = new System.Windows.Forms.Label();
+            this.cpuLoadLabel = new System.Windows.Forms.Label();
+            this.gpuLoadLabel = new System.Windows.Forms.Label();
+            this.dramLabel = new System.Windows.Forms.Label();
+            this.vramLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // serialPort
@@ -118,9 +122,7 @@
             "1000",
             "2500",
             "5000",
-            "10000",
-            "50000",
-            "100000"});
+            "10000"});
             this.SendInterval.Location = new System.Drawing.Point(360, 12);
             this.SendInterval.Name = "SendInterval";
             this.SendInterval.Size = new System.Drawing.Size(80, 21);
@@ -220,11 +222,51 @@
             this.hddTempLabel.TabIndex = 11;
             this.hddTempLabel.Text = "hddTempLabel";
             // 
+            // cpuLoadLabel
+            // 
+            this.cpuLoadLabel.AutoSize = true;
+            this.cpuLoadLabel.Location = new System.Drawing.Point(293, 49);
+            this.cpuLoadLabel.Name = "cpuLoadLabel";
+            this.cpuLoadLabel.Size = new System.Drawing.Size(75, 13);
+            this.cpuLoadLabel.TabIndex = 14;
+            this.cpuLoadLabel.Text = "cpuLoadLabel";
+            // 
+            // gpuLoadLabel
+            // 
+            this.gpuLoadLabel.AutoSize = true;
+            this.gpuLoadLabel.Location = new System.Drawing.Point(293, 83);
+            this.gpuLoadLabel.Name = "gpuLoadLabel";
+            this.gpuLoadLabel.Size = new System.Drawing.Size(75, 13);
+            this.gpuLoadLabel.TabIndex = 15;
+            this.gpuLoadLabel.Text = "gpuLoadLabel";
+            // 
+            // dramLabel
+            // 
+            this.dramLabel.AutoSize = true;
+            this.dramLabel.Location = new System.Drawing.Point(405, 49);
+            this.dramLabel.Name = "dramLabel";
+            this.dramLabel.Size = new System.Drawing.Size(56, 13);
+            this.dramLabel.TabIndex = 16;
+            this.dramLabel.Text = "dramLabel";
+            // 
+            // vramLabel
+            // 
+            this.vramLabel.AutoSize = true;
+            this.vramLabel.Location = new System.Drawing.Point(405, 83);
+            this.vramLabel.Name = "vramLabel";
+            this.vramLabel.Size = new System.Drawing.Size(56, 13);
+            this.vramLabel.TabIndex = 17;
+            this.vramLabel.Text = "vramLabel";
+            // 
             // ServerGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 161);
+            this.Controls.Add(this.vramLabel);
+            this.Controls.Add(this.dramLabel);
+            this.Controls.Add(this.gpuLoadLabel);
+            this.Controls.Add(this.cpuLoadLabel);
             this.Controls.Add(this.cpuTempLabel);
             this.Controls.Add(this.gpuTempLabel);
             this.Controls.Add(this.hddTempLabel);
@@ -241,7 +283,7 @@
             this.Controls.Add(this.COMPort);
             this.MaximizeBox = false;
             this.Name = "ServerGUI";
-            this.Text = "OHM-Serial v0.1";
+            this.Text = "OHM-Serial v0.2";
             this.Resize += new System.EventHandler(this.ServerGUI_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -267,6 +309,10 @@
         private System.Windows.Forms.Label cpuTempLabel;
         private System.Windows.Forms.Label gpuTempLabel;
         private System.Windows.Forms.Label hddTempLabel;
+        private System.Windows.Forms.Label cpuLoadLabel;
+        private System.Windows.Forms.Label gpuLoadLabel;
+        private System.Windows.Forms.Label dramLabel;
+        private System.Windows.Forms.Label vramLabel;
     }
 }
 

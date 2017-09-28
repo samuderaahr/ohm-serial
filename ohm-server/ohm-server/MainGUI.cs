@@ -39,6 +39,8 @@ namespace ohm_server
         public string dramFree;
         public string vramFree;
 
+        public bool hasArduinoReset = false;
+
         public ServerGUI()
         {
             InitializeComponent();
@@ -52,13 +54,22 @@ namespace ohm_server
             //Get Human-readable Hardware Names and Specs
             GetHardwareNames();
             //Update hardware at least once to avoid null temp/other values
-            UpdateHardware();
+            //UpdateHardware();
         }
 
         // main program sequence, what happens on timerTick
         private void intervalTimer_Tick(object sender, EventArgs e)
         {
-            UpdateHardware();
+            //reset arduino implemented here as the Thread.Sleep method interferes with NVIDIA GPU Readings
+            //TODO: Make this work with interval values less than 2000
+            if (!hasArduinoReset)
+            {
+                serialPort.DtrEnable = true;
+                hasArduinoReset = true;
+            }
+
+            else
+                serialPort.DtrEnable = false;
 
             // TODO: make workaround to make calls more eye-friendly
             cpuTemp = ReadSensor("CPU Package", OpenHardwareMonitor.Hardware.SensorType.Temperature);
@@ -67,7 +78,7 @@ namespace ohm_server
             gpuLoad = ReadSensor("GPU Core", OpenHardwareMonitor.Hardware.SensorType.Load);
             hddTemp = ReadSensor("Temperature", OpenHardwareMonitor.Hardware.SensorType.Temperature);
             dramFree = ReadSensor("Available Memory", OpenHardwareMonitor.Hardware.SensorType.Data);
-            vramFree = ReadSensor("GPU Memory Free", OpenHardwareMonitor.Hardware.SensorType.Data);
+            vramFree = ReadSensor("GPU Memory Free", OpenHardwareMonitor.Hardware.SensorType.SmallData);
 
             if (totalDRAM == "000000")
             {
@@ -84,7 +95,7 @@ namespace ohm_server
             }
 
             if (totalVRAM == "000000")
-                totalVRAM = ReadSensor("GPU Memory Total", OpenHardwareMonitor.Hardware.SensorType.Data);
+                totalVRAM = ReadSensor("GPU Memory Total", OpenHardwareMonitor.Hardware.SensorType.SmallData);
 
             sendString();
 
@@ -104,6 +115,9 @@ namespace ohm_server
             //iterate thru each hardware via IHardware iterables
             foreach (OpenHardwareMonitor.Hardware.IHardware myHardware in myComputer.Hardware)
             {
+                //TODO: Relocate the update to just once per interval that might reduce 
+                //CPU usage significantly at the cost of data latency
+                myHardware.Update();
                 foreach (OpenHardwareMonitor.Hardware.ISensor mySensor in myHardware.Sensors)
                 {
                     if (sensorType == mySensor.SensorType)
@@ -112,7 +126,11 @@ namespace ohm_server
                         {
                             if (mySensor.Value != null)
                             {
-                                int temp = (int) mySensor.Value;
+                                float temp;
+                                if (mySensor.SensorType == OpenHardwareMonitor.Hardware.SensorType.Data)
+                                    temp = (float)Math.Round((double)(mySensor.Value*1024));
+                                else
+                                    temp = (int) mySensor.Value;
                                 return temp.ToString().PadLeft(3, '0');
                             }
                         }
@@ -133,6 +151,10 @@ namespace ohm_server
             cpuTempLabel.Text = cpuTemp + " °C";
             gpuTempLabel.Text = gpuTemp + " °C";
             hddTempLabel.Text = hddTemp + " °C";
+            cpuLoadLabel.Text = cpuLoad + " %";
+            gpuLoadLabel.Text = gpuLoad + " %";
+            dramLabel.Text = dramFree + "MB / " + totalDRAM + "MB";
+            vramLabel.Text = vramFree + "MB / " + totalVRAM + "MB";
         }
 
         private void COMPort_SelectedIndexChanged(object sender, EventArgs e)
@@ -179,9 +201,9 @@ namespace ohm_server
                 if (!serialPort.IsOpen)
                     serialPort.Open();
 
-                serialPort.WriteLine("WHATSUP MOTHAFUCKA");
+                serialPort.WriteLine("WHATSUP MADDAFAKKA");
 
-                statusPanel.Text = "Transmission Started | Port: " + serialPort.PortName + " | Baud: " + serialPort.BaudRate;
+                statusPanel.Text = "Transmission Started | Port: " + serialPort.PortName + " | Baud: " + serialPort.BaudRate + " | Interval: " + intervalTimer.Interval;
 
                 intervalTimer.Start();
             }
@@ -194,6 +216,8 @@ namespace ohm_server
 
         private void Stop()
         {
+            hasArduinoReset = false;
+
             intervalTimer.Stop();
             serialPort.Close();
 
@@ -241,7 +265,7 @@ namespace ohm_server
                 catch (ArgumentException) { }
 
                 COMPort.SelectedIndex = 0;      //first com port default
-                BaudRate.SelectedIndex = 4;     //predefault data. 57600 default
+                BaudRate.SelectedIndex = 4;     //predefined data. 57600 default
                 SendInterval.SelectedIndex = 4; //predefined data. 1000ms interval default
 
                 string PortValue = ((KeyValuePair<int, string>)COMPort.SelectedItem).Value;
