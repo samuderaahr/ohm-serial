@@ -24,7 +24,7 @@ namespace ohm_server
         //hardware names
         public string CPUName = String.Empty;
         public string GPUName = String.Empty;
-        public string HDDName= String.Empty;
+        public string HDDName = String.Empty;
 
         //persistent variables
         public string totalDRAM = "000000";
@@ -71,15 +71,20 @@ namespace ohm_server
 
             if (totalDRAM == "000000")
             {
-                totalDRAM = ReadSensor("Used Memory", OpenHardwareMonitor.Hardware.SensorType.Data);
-                decimal temp = Convert.ToDecimal(totalDRAM);
-                totalDRAM = ReadSensor("Available Memory", OpenHardwareMonitor.Hardware.SensorType.Data);
-                temp += Convert.ToDecimal(totalDRAM);
-                totalDRAM = temp.ToString();
+                try
+                {
+                    totalDRAM = ReadSensor("Used Memory", OpenHardwareMonitor.Hardware.SensorType.Data);
+                    decimal temp = Convert.ToDecimal(totalDRAM);
+                    totalDRAM = ReadSensor("Available Memory", OpenHardwareMonitor.Hardware.SensorType.Data);
+                    temp += Convert.ToDecimal(totalDRAM);
+                    totalDRAM = temp.ToString();
+                }
+
+                catch (FormatException) { }
             }
 
             if (totalVRAM == "000000")
-                totalVRAM = ReadSensor("GPU Memory Total", OpenHardwareMonitor.Hardware.SensorType.Data);            
+                totalVRAM = ReadSensor("GPU Memory Total", OpenHardwareMonitor.Hardware.SensorType.Data);
 
             sendString();
 
@@ -107,7 +112,7 @@ namespace ohm_server
                         {
                             if (mySensor.Value != null)
                             {
-                                int temp = (int)mySensor.Value;
+                                int temp = (int) mySensor.Value;
                                 return temp.ToString().PadLeft(3, '0');
                             }
                         }
@@ -115,7 +120,7 @@ namespace ohm_server
                 }
             }
 
-            return "   ";
+            return "N/A";
         }
 
         private void sendString()
@@ -136,7 +141,7 @@ namespace ohm_server
 
             serialPort.PortName = PortValue;
         }
-        
+
         private void BaudRate_SelectedIndexChanged(object sender, EventArgs e)
         {
             serialPort.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
