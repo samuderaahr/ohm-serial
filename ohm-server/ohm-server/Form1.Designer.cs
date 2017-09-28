@@ -41,6 +41,9 @@
             this.BaudRate = new System.Windows.Forms.ComboBox();
             this.COMPort = new System.Windows.Forms.ComboBox();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.cpuLabel = new System.Windows.Forms.Label();
+            this.gpuLabel = new System.Windows.Forms.Label();
+            this.hddLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // serialPort
@@ -160,11 +163,41 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
             // 
+            // cpuLabel
+            // 
+            this.cpuLabel.AutoSize = true;
+            this.cpuLabel.Location = new System.Drawing.Point(12, 49);
+            this.cpuLabel.Name = "cpuLabel";
+            this.cpuLabel.Size = new System.Drawing.Size(51, 13);
+            this.cpuLabel.TabIndex = 8;
+            this.cpuLabel.Text = "cpuLabel";
+            // 
+            // gpuLabel
+            // 
+            this.gpuLabel.AutoSize = true;
+            this.gpuLabel.Location = new System.Drawing.Point(12, 83);
+            this.gpuLabel.Name = "gpuLabel";
+            this.gpuLabel.Size = new System.Drawing.Size(51, 13);
+            this.gpuLabel.TabIndex = 9;
+            this.gpuLabel.Text = "gpuLabel";
+            // 
+            // hddLabel
+            // 
+            this.hddLabel.AutoSize = true;
+            this.hddLabel.Location = new System.Drawing.Point(12, 117);
+            this.hddLabel.Name = "hddLabel";
+            this.hddLabel.Size = new System.Drawing.Size(51, 13);
+            this.hddLabel.TabIndex = 10;
+            this.hddLabel.Text = "hddLabel";
+            // 
             // ServerGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 161);
+            this.Controls.Add(this.hddLabel);
+            this.Controls.Add(this.gpuLabel);
+            this.Controls.Add(this.cpuLabel);
             this.Controls.Add(this.StopButton);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.label3);
@@ -195,6 +228,9 @@
         private System.Windows.Forms.ComboBox BaudRate;
         private System.Windows.Forms.ComboBox COMPort;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.Label cpuLabel;
+        private System.Windows.Forms.Label gpuLabel;
+        private System.Windows.Forms.Label hddLabel;
     }
 }
 

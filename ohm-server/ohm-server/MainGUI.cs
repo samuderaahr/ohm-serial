@@ -21,6 +21,11 @@ namespace ohm_server
         private OpenHardwareMonitor.Hardware.Computer myComputer =
             new OpenHardwareMonitor.Hardware.Computer();
 
+        //hardware names
+        public string CPUName = String.Empty;
+        public string GPUName = String.Empty;
+        public string HDDName= String.Empty;
+
         //persistent variables
         public string totalDRAM = "0000";
         public string totalVRAM = "0000";
@@ -59,7 +64,29 @@ namespace ohm_server
 
         private void GetHardwareNames()
         {
- 	        
+            foreach (OpenHardwareMonitor.Hardware.IHardware myHardware in myComputer.Hardware)
+            {
+                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.CPU)
+                    CPUName = myHardware.Name;
+
+                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.GpuAti)
+                    GPUName = myHardware.Name;
+
+                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.GpuNvidia)
+                    GPUName = myHardware.Name;
+
+                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.HDD)
+                    HDDName = myHardware.Name;
+            }
+
+            if (CPUName != String.Empty)
+                cpuLabel.Text = CPUName;
+
+            if (GPUName != String.Empty)
+                gpuLabel.Text = GPUName;
+
+            if (HDDName != String.Empty)
+                hddLabel.Text = HDDName;
         }
 
         private string ReadSensor(string sensorName)
