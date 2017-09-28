@@ -44,6 +44,9 @@
             this.cpuLabel = new System.Windows.Forms.Label();
             this.gpuLabel = new System.Windows.Forms.Label();
             this.hddLabel = new System.Windows.Forms.Label();
+            this.cpuTempLabel = new System.Windows.Forms.Label();
+            this.gpuTempLabel = new System.Windows.Forms.Label();
+            this.hddTempLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // serialPort
@@ -190,11 +193,41 @@
             this.hddLabel.TabIndex = 10;
             this.hddLabel.Text = "hddLabel";
             // 
+            // cpuTempLabel
+            // 
+            this.cpuTempLabel.AutoSize = true;
+            this.cpuTempLabel.Location = new System.Drawing.Point(171, 49);
+            this.cpuTempLabel.Name = "cpuTempLabel";
+            this.cpuTempLabel.Size = new System.Drawing.Size(78, 13);
+            this.cpuTempLabel.TabIndex = 13;
+            this.cpuTempLabel.Text = "cpuTempLabel";
+            // 
+            // gpuTempLabel
+            // 
+            this.gpuTempLabel.AutoSize = true;
+            this.gpuTempLabel.Location = new System.Drawing.Point(171, 83);
+            this.gpuTempLabel.Name = "gpuTempLabel";
+            this.gpuTempLabel.Size = new System.Drawing.Size(78, 13);
+            this.gpuTempLabel.TabIndex = 12;
+            this.gpuTempLabel.Text = "gpuTempLabel";
+            // 
+            // hddTempLabel
+            // 
+            this.hddTempLabel.AutoSize = true;
+            this.hddTempLabel.Location = new System.Drawing.Point(171, 117);
+            this.hddTempLabel.Name = "hddTempLabel";
+            this.hddTempLabel.Size = new System.Drawing.Size(78, 13);
+            this.hddTempLabel.TabIndex = 11;
+            this.hddTempLabel.Text = "hddTempLabel";
+            // 
             // ServerGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 161);
+            this.Controls.Add(this.cpuTempLabel);
+            this.Controls.Add(this.gpuTempLabel);
+            this.Controls.Add(this.hddTempLabel);
             this.Controls.Add(this.hddLabel);
             this.Controls.Add(this.gpuLabel);
             this.Controls.Add(this.cpuLabel);
@@ -231,6 +264,9 @@
         private System.Windows.Forms.Label cpuLabel;
         private System.Windows.Forms.Label gpuLabel;
         private System.Windows.Forms.Label hddLabel;
+        private System.Windows.Forms.Label cpuTempLabel;
+        private System.Windows.Forms.Label gpuTempLabel;
+        private System.Windows.Forms.Label hddTempLabel;
     }
 }
 

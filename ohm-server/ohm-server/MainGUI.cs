@@ -27,8 +27,8 @@ namespace ohm_server
         public string HDDName= String.Empty;
 
         //persistent variables
-        public string totalDRAM = "0000";
-        public string totalVRAM = "0000";
+        public string totalDRAM = "000000";
+        public string totalVRAM = "000000";
 
         //changing variables
         public string cpuTemp;
@@ -49,122 +49,86 @@ namespace ohm_server
             InitializeControls();
             //Sensor initialization sequence
             InitializeSensors();
-            //TODO: Get Human-readable Hardware Names and Specs
+            //Get Human-readable Hardware Names and Specs
             GetHardwareNames();
+            //Update hardware at least once to avoid null temp/other values
+            UpdateHardware();
         }
 
-        private void InitializeSensors()
+        // main program sequence, what happens on timerTick
+        private void intervalTimer_Tick(object sender, EventArgs e)
         {
-            myComputer.CPUEnabled = true;
-            myComputer.GPUEnabled = true;
-            myComputer.HDDEnabled = true;
-            myComputer.RAMEnabled = true;
-            myComputer.Open();
+            UpdateHardware();
+
+            // TODO: make workaround to make calls more eye-friendly
+            cpuTemp = ReadSensor("CPU Package", OpenHardwareMonitor.Hardware.SensorType.Temperature);
+            cpuLoad = ReadSensor("CPU Total", OpenHardwareMonitor.Hardware.SensorType.Load);
+            gpuTemp = ReadSensor("GPU Core", OpenHardwareMonitor.Hardware.SensorType.Temperature);
+            gpuLoad = ReadSensor("GPU Core", OpenHardwareMonitor.Hardware.SensorType.Load);
+            hddTemp = ReadSensor("Temperature", OpenHardwareMonitor.Hardware.SensorType.Temperature);
+            dramFree = ReadSensor("Available Memory", OpenHardwareMonitor.Hardware.SensorType.Data);
+            vramFree = ReadSensor("GPU Memory Free", OpenHardwareMonitor.Hardware.SensorType.Data);
+
+            if (totalDRAM == "000000")
+            {
+                totalDRAM = ReadSensor("Used Memory", OpenHardwareMonitor.Hardware.SensorType.Data);
+                decimal temp = Convert.ToDecimal(totalDRAM);
+                totalDRAM = ReadSensor("Available Memory", OpenHardwareMonitor.Hardware.SensorType.Data);
+                temp += Convert.ToDecimal(totalDRAM);
+                totalDRAM = temp.ToString();
+            }
+
+            if (totalVRAM == "000000")
+                totalVRAM = ReadSensor("GPU Memory Total", OpenHardwareMonitor.Hardware.SensorType.Data);            
+
+            sendString();
+
+            updateGUILabels();
         }
 
-        private void GetHardwareNames()
+        private void UpdateHardware()
         {
             foreach (OpenHardwareMonitor.Hardware.IHardware myHardware in myComputer.Hardware)
             {
-                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.CPU)
-                    CPUName = myHardware.Name;
-
-                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.GpuAti)
-                    GPUName = myHardware.Name;
-
-                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.GpuNvidia)
-                    GPUName = myHardware.Name;
-
-                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.HDD)
-                    HDDName = myHardware.Name;
+                myHardware.Update();
             }
-
-            if (CPUName != String.Empty)
-                cpuLabel.Text = CPUName;
-
-            if (GPUName != String.Empty)
-                gpuLabel.Text = GPUName;
-
-            if (HDDName != String.Empty)
-                hddLabel.Text = HDDName;
         }
 
-        private string ReadSensor(string sensorName)
+        private string ReadSensor(string sensorName, OpenHardwareMonitor.Hardware.SensorType sensorType)
         {
             //iterate thru each hardware via IHardware iterables
             foreach (OpenHardwareMonitor.Hardware.IHardware myHardware in myComputer.Hardware)
             {
                 foreach (OpenHardwareMonitor.Hardware.ISensor mySensor in myHardware.Sensors)
                 {
-                    if (sensorName == mySensor.Name)
+                    if (sensorType == mySensor.SensorType)
                     {
-                        if (mySensor.Value != null)
+                        if (sensorName == mySensor.Name)
                         {
-                            int temp = (int)mySensor.Value;
-                            return temp.ToString();
+                            if (mySensor.Value != null)
+                            {
+                                int temp = (int)mySensor.Value;
+                                return temp.ToString().PadLeft(3, '0');
+                            }
                         }
                     }
                 }
             }
 
-            return String.Empty;
+            return "   ";
         }
 
-        //    myHardware.Update();
-        //    foreach (OpenHardwareMonitor.Hardware.ISensor mySensor in myHardware.Sensors)
-        //    {
-        //        int temp = (int)mySensor.Value;
-        //        if (mySensor.SensorType == OpenHardwareMonitor.Hardware.SensorType.Temperature)
-        //        {
-        //            if (temp != null)
-        //            {
-        //                switch (mySensor.Name)
-        //                {
-        //                    case "CPU Package":
-        //                        cpuTemp = temp.ToString().PadLeft(3, '0');
-        //                        break;
-        //                    case "GPU Core":
-        //                        gpuTemp = temp.ToString().PadLeft(3, '0');
-        //                        break;
-        //                    case "Temperature":
-        //                        hddTemp = temp.ToString().PadLeft(3, '0');
-        //                        break;
-        //                }
-        //            }
-        //        }
+        private void sendString()
+        {
 
-        //        if (mySensor.SensorType == OpenHardwareMonitor.Hardware.SensorType.Load)
-        //        {
-        //            if (temp != null)
-        //            {
-        //                switch (mySensor.Name)
-        //                {
-        //                    case "CPU Total":
-        //                        cpuLoad = temp.ToString().PadLeft(3, '0');
-        //                        break;
-        //                    case "GPU Core":
-        //                        gpuLoad = temp.ToString().PadLeft(3, '0');
-        //                        break;
-        //                }
-        //            }
-        //        }
+        }
 
-        //        if (mySensor.SensorType == OpenHardwareMonitor.Hardware.SensorType.Data)
-        //        {
-        //            if (temp != null)
-        //            {
-        //                switch (mySensor.Name)
-        //                {
-        //                    case "Available Memory":
-        //                        dramFree = temp.ToString().PadLeft(3, '0');
-        //                        break;
-        //                    case "GPU Memory Free":
-        //                        vramFree = temp.ToString().PadLeft(3, '0');
-        //                        break;
-        //                }
-        //            }
-        //        }
-        //    }
+        private void updateGUILabels()
+        {
+            cpuTempLabel.Text = cpuTemp + " °C";
+            gpuTempLabel.Text = gpuTemp + " °C";
+            hddTempLabel.Text = hddTemp + " °C";
+        }
 
         private void COMPort_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -198,6 +162,11 @@ namespace ohm_server
             Stop();
         }
 
+        private void StopButton_Click(object sender, EventArgs e)
+        {
+            Stop();
+        }
+
         private void StartButton_Click(object sender, EventArgs e)
         {
             try
@@ -216,11 +185,6 @@ namespace ohm_server
             {
                 statusPanel.Text = "Another app is using the COM Port";
             }
-        }
-
-        private void StopButton_Click(object sender, EventArgs e)
-        {
-            Stop();
         }
 
         private void Stop()
@@ -299,22 +263,44 @@ namespace ohm_server
             notifyIcon.Visible = false;
         }
 
-        private void intervalTimer_Tick(object sender, EventArgs e)
+        private void InitializeSensors()
         {
-            sendString();
+            myComputer.CPUEnabled = true;
+            myComputer.GPUEnabled = true;
+            myComputer.HDDEnabled = true;
+            myComputer.RAMEnabled = true;
+            myComputer.Open();
+        }
 
-            // update hardware AFTER successfully send string
+        private void GetHardwareNames()
+        {
             foreach (OpenHardwareMonitor.Hardware.IHardware myHardware in myComputer.Hardware)
             {
-                myHardware.Update();
+                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.CPU)
+                    CPUName = myHardware.Name;
+
+                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.GpuAti)
+                    GPUName = myHardware.Name;
+
+                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.GpuNvidia)
+                    GPUName = myHardware.Name;
+
+                if (myHardware.HardwareType == OpenHardwareMonitor.Hardware.HardwareType.HDD)
+                    HDDName = myHardware.Name;
             }
-        }
 
-        private void sendString()
-        {
-            
-        }
+            if (cpuLabel.Text == "cpuLabel")
+                if (CPUName != String.Empty)
+                    cpuLabel.Text = CPUName;
 
+            if (gpuLabel.Text == "gpuLabel")
+                if (GPUName != String.Empty)
+                    gpuLabel.Text = GPUName;
+
+            if (hddLabel.Text == "hddLabel")
+                if (HDDName != String.Empty)
+                    hddLabel.Text = HDDName;
+        }
     }
 
     public class ComboboxItem
