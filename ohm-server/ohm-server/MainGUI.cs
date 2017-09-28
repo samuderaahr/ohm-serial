@@ -136,7 +136,7 @@ namespace ohm_server
 
             serialPort.PortName = PortValue;
         }
-
+        
         private void BaudRate_SelectedIndexChanged(object sender, EventArgs e)
         {
             serialPort.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
@@ -144,7 +144,7 @@ namespace ohm_server
 
         private void SendInterval_SelectedIndexChanged(object sender, EventArgs e)
         {
-            intervalTimer.Interval = Convert.ToInt32(SendInterval.SelectedIndex.ToString());
+            intervalTimer.Interval = Convert.ToInt32(SendInterval.SelectedItem.ToString());
         }
 
         private void COMPort_DropDown(object sender, EventArgs e)
