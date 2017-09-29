@@ -97,7 +97,7 @@ namespace ohm_server
             if (totalVRAM == "000000")
                 totalVRAM = ReadSensor("GPU Memory Total", OpenHardwareMonitor.Hardware.SensorType.SmallData);
 
-            sendString();
+            sendRoutine();
 
             updateGUILabels();
         }
@@ -141,9 +141,22 @@ namespace ohm_server
             return "N/A";
         }
 
-        private void sendString()
+        private void sendRoutine()
         {
+            string temp = String.Empty;
 
+            temp = '#' + cpuTemp + '.' + gpuTemp + '.' + hddTemp + '.' + cpuLabel + '.' + gpuLoad + '.' + dramFree + '.' + vramFree;
+
+            serialPort.WriteLine(temp);
+        }
+
+        private void sendOnce()
+        {
+            string temp = String.Empty;
+
+            temp = '$' + CPUName + '.' + GPUName + '.' + HDDName + '.' + totalDRAM + '.' + totalVRAM;
+
+            serialPort.WriteLine(temp);
         }
 
         private void updateGUILabels()
