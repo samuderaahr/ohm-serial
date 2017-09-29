@@ -97,7 +97,8 @@ namespace ohm_server
             if (totalVRAM == "000000")
                 totalVRAM = ReadSensor("GPU Memory Total", OpenHardwareMonitor.Hardware.SensorType.SmallData);
 
-            sendRoutine();
+            if (serialPort.IsOpen)
+                sendRoutine();
 
             updateGUILabels();
         }
@@ -145,7 +146,7 @@ namespace ohm_server
         {
             string temp = String.Empty;
 
-            temp = '#' + cpuTemp + '.' + gpuTemp + '.' + hddTemp + '.' + cpuLabel + '.' + gpuLoad + '.' + dramFree + '.' + vramFree;
+            temp = '#' + cpuTemp + '.' + gpuTemp + '.' + hddTemp + '.' + cpuLoad + '.' + gpuLoad + '.' + dramFree + '.' + vramFree;
 
             serialPort.WriteLine(temp);
         }
@@ -214,7 +215,8 @@ namespace ohm_server
                 if (!serialPort.IsOpen)
                     serialPort.Open();
 
-                serialPort.WriteLine("WHATSUP MADDAFAKKA");
+                //serialPort.WriteLine("WHATSUP MADDAFAKKA");
+                sendOnce();
 
                 statusPanel.Text = "Transmission Started | Port: " + serialPort.PortName + " | Baud: " + serialPort.BaudRate + " | Interval: " + intervalTimer.Interval;
 
