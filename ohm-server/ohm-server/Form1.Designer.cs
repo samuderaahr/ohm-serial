@@ -1,4 +1,6 @@
-﻿namespace ohm_server
+﻿using System;
+
+namespace ohm_server
 {
     partial class ServerGUI
     {
@@ -51,6 +53,8 @@
             this.gpuLoadLabel = new System.Windows.Forms.Label();
             this.dramLabel = new System.Windows.Forms.Label();
             this.vramLabel = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // serialPort
@@ -64,9 +68,9 @@
             // StopButton
             // 
             this.StopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StopButton.Location = new System.Drawing.Point(518, 12);
+            this.StopButton.Location = new System.Drawing.Point(315, 103);
             this.StopButton.Name = "StopButton";
-            this.StopButton.Size = new System.Drawing.Size(60, 23);
+            this.StopButton.Size = new System.Drawing.Size(60, 30);
             this.StopButton.TabIndex = 7;
             this.StopButton.Text = "STOP";
             this.StopButton.UseVisualStyleBackColor = true;
@@ -76,9 +80,9 @@
             // 
             this.StartButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.StartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartButton.Location = new System.Drawing.Point(450, 12);
+            this.StartButton.Location = new System.Drawing.Point(249, 103);
             this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(60, 23);
+            this.StartButton.Size = new System.Drawing.Size(60, 30);
             this.StartButton.TabIndex = 6;
             this.StartButton.Text = "START";
             this.StartButton.UseVisualStyleBackColor = true;
@@ -87,7 +91,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 15);
+            this.label1.Location = new System.Drawing.Point(3, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 3;
@@ -96,16 +100,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(148, 15);
+            this.label2.Location = new System.Drawing.Point(123, 15);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 13);
+            this.label2.Size = new System.Drawing.Size(50, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Baud Rate";
+            this.label2.Text = "Baudrate";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(293, 15);
+            this.label3.Location = new System.Drawing.Point(245, 15);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(64, 13);
             this.label3.TabIndex = 5;
@@ -123,9 +127,9 @@
             "2500",
             "5000",
             "10000"});
-            this.SendInterval.Location = new System.Drawing.Point(360, 12);
+            this.SendInterval.Location = new System.Drawing.Point(315, 12);
             this.SendInterval.Name = "SendInterval";
-            this.SendInterval.Size = new System.Drawing.Size(80, 21);
+            this.SendInterval.Size = new System.Drawing.Size(60, 21);
             this.SendInterval.TabIndex = 2;
             this.SendInterval.DropDown += new System.EventHandler(this.SendInterval_DropDown);
             this.SendInterval.SelectedIndexChanged += new System.EventHandler(this.SendInterval_SelectedIndexChanged);
@@ -141,9 +145,9 @@
             "57600",
             "115200",
             "230400"});
-            this.BaudRate.Location = new System.Drawing.Point(209, 12);
+            this.BaudRate.Location = new System.Drawing.Point(179, 12);
             this.BaudRate.Name = "BaudRate";
-            this.BaudRate.Size = new System.Drawing.Size(80, 21);
+            this.BaudRate.Size = new System.Drawing.Size(60, 21);
             this.BaudRate.TabIndex = 1;
             this.BaudRate.DropDown += new System.EventHandler(this.BaudRate_DropDown);
             this.BaudRate.SelectedIndexChanged += new System.EventHandler(this.BaudRate_SelectedIndexChanged);
@@ -151,9 +155,9 @@
             // COMPort
             // 
             this.COMPort.FormattingEnabled = true;
-            this.COMPort.Location = new System.Drawing.Point(60, 12);
+            this.COMPort.Location = new System.Drawing.Point(58, 12);
             this.COMPort.Name = "COMPort";
-            this.COMPort.Size = new System.Drawing.Size(80, 21);
+            this.COMPort.Size = new System.Drawing.Size(60, 21);
             this.COMPort.TabIndex = 0;
             this.COMPort.DropDown += new System.EventHandler(this.COMPort_DropDown);
             this.COMPort.SelectedIndexChanged += new System.EventHandler(this.COMPort_SelectedIndexChanged);
@@ -198,7 +202,7 @@
             // cpuTempLabel
             // 
             this.cpuTempLabel.AutoSize = true;
-            this.cpuTempLabel.Location = new System.Drawing.Point(171, 49);
+            this.cpuTempLabel.Location = new System.Drawing.Point(154, 49);
             this.cpuTempLabel.Name = "cpuTempLabel";
             this.cpuTempLabel.Size = new System.Drawing.Size(78, 13);
             this.cpuTempLabel.TabIndex = 13;
@@ -207,7 +211,7 @@
             // gpuTempLabel
             // 
             this.gpuTempLabel.AutoSize = true;
-            this.gpuTempLabel.Location = new System.Drawing.Point(171, 83);
+            this.gpuTempLabel.Location = new System.Drawing.Point(154, 83);
             this.gpuTempLabel.Name = "gpuTempLabel";
             this.gpuTempLabel.Size = new System.Drawing.Size(78, 13);
             this.gpuTempLabel.TabIndex = 12;
@@ -216,7 +220,7 @@
             // hddTempLabel
             // 
             this.hddTempLabel.AutoSize = true;
-            this.hddTempLabel.Location = new System.Drawing.Point(171, 117);
+            this.hddTempLabel.Location = new System.Drawing.Point(154, 117);
             this.hddTempLabel.Name = "hddTempLabel";
             this.hddTempLabel.Size = new System.Drawing.Size(78, 13);
             this.hddTempLabel.TabIndex = 11;
@@ -225,7 +229,7 @@
             // cpuLoadLabel
             // 
             this.cpuLoadLabel.AutoSize = true;
-            this.cpuLoadLabel.Location = new System.Drawing.Point(293, 49);
+            this.cpuLoadLabel.Location = new System.Drawing.Point(210, 49);
             this.cpuLoadLabel.Name = "cpuLoadLabel";
             this.cpuLoadLabel.Size = new System.Drawing.Size(75, 13);
             this.cpuLoadLabel.TabIndex = 14;
@@ -234,7 +238,7 @@
             // gpuLoadLabel
             // 
             this.gpuLoadLabel.AutoSize = true;
-            this.gpuLoadLabel.Location = new System.Drawing.Point(293, 83);
+            this.gpuLoadLabel.Location = new System.Drawing.Point(210, 83);
             this.gpuLoadLabel.Name = "gpuLoadLabel";
             this.gpuLoadLabel.Size = new System.Drawing.Size(75, 13);
             this.gpuLoadLabel.TabIndex = 15;
@@ -243,7 +247,7 @@
             // dramLabel
             // 
             this.dramLabel.AutoSize = true;
-            this.dramLabel.Location = new System.Drawing.Point(405, 49);
+            this.dramLabel.Location = new System.Drawing.Point(265, 49);
             this.dramLabel.Name = "dramLabel";
             this.dramLabel.Size = new System.Drawing.Size(56, 13);
             this.dramLabel.TabIndex = 16;
@@ -252,17 +256,28 @@
             // vramLabel
             // 
             this.vramLabel.AutoSize = true;
-            this.vramLabel.Location = new System.Drawing.Point(405, 83);
+            this.vramLabel.Location = new System.Drawing.Point(265, 83);
             this.vramLabel.Name = "vramLabel";
             this.vramLabel.Size = new System.Drawing.Size(56, 13);
             this.vramLabel.TabIndex = 17;
             this.vramLabel.Text = "vramLabel";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::ohm_server.Properties.Resources.refresh;
+            this.pictureBox1.Location = new System.Drawing.Point(213, 105);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(27, 27);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 18;
+            this.pictureBox1.TabStop = false;
+            // 
             // ServerGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 161);
+            this.ClientSize = new System.Drawing.Size(384, 161);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.vramLabel);
             this.Controls.Add(this.dramLabel);
             this.Controls.Add(this.gpuLoadLabel);
@@ -285,6 +300,7 @@
             this.Name = "ServerGUI";
             this.Text = "OHM-Serial v0.2";
             this.Resize += new System.EventHandler(this.ServerGUI_Resize);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -313,6 +329,7 @@
         private System.Windows.Forms.Label gpuLoadLabel;
         private System.Windows.Forms.Label dramLabel;
         private System.Windows.Forms.Label vramLabel;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

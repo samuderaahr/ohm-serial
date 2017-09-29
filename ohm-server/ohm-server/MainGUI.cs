@@ -54,7 +54,7 @@ namespace ohm_server
             //Get Human-readable Hardware Names and Specs
             GetHardwareNames();
             //Update hardware at least once to avoid null temp/other values
-            //UpdateHardware();
+            UpdateHardware();
         }
 
         // main program sequence, what happens on timerTick
