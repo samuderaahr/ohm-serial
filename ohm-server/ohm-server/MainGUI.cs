@@ -257,6 +257,9 @@ namespace ohm_server
             intervalTimer.Stop();
             serialPort.Close();
 
+            //workaround to flaky IsOpen getter
+            portsDetected = false;
+
             statusPanel.Text = "Transmission Stopped";
         }
 
@@ -330,7 +333,10 @@ namespace ohm_server
                 }
 
                 else
+                {
+                    portsDetected = false;
                     statusPanel.Text = "No COM Port detected. Please click refresh.";
+                }
             }
         }
 
