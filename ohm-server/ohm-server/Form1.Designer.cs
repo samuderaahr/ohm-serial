@@ -53,8 +53,8 @@ namespace ohm_server
             this.gpuLoadLabel = new System.Windows.Forms.Label();
             this.dramLabel = new System.Windows.Forms.Label();
             this.vramLabel = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.refreshButton = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.refreshButton)).BeginInit();
             this.SuspendLayout();
             // 
             // serialPort
@@ -262,22 +262,23 @@ namespace ohm_server
             this.vramLabel.TabIndex = 17;
             this.vramLabel.Text = "vramLabel";
             // 
-            // pictureBox1
+            // refreshButton
             // 
-            this.pictureBox1.Image = global::ohm_server.Properties.Resources.refresh;
-            this.pictureBox1.Location = new System.Drawing.Point(213, 105);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(27, 27);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 18;
-            this.pictureBox1.TabStop = false;
+            this.refreshButton.Image = global::ohm_server.Properties.Resources.refresh;
+            this.refreshButton.Location = new System.Drawing.Point(211, 105);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(27, 27);
+            this.refreshButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.refreshButton.TabIndex = 18;
+            this.refreshButton.TabStop = false;
+            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
             // 
             // ServerGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 161);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.refreshButton);
             this.Controls.Add(this.vramLabel);
             this.Controls.Add(this.dramLabel);
             this.Controls.Add(this.gpuLoadLabel);
@@ -300,7 +301,7 @@ namespace ohm_server
             this.Name = "ServerGUI";
             this.Text = "OHM-Serial v0.2";
             this.Resize += new System.EventHandler(this.ServerGUI_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.refreshButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -329,7 +330,7 @@ namespace ohm_server
         private System.Windows.Forms.Label gpuLoadLabel;
         private System.Windows.Forms.Label dramLabel;
         private System.Windows.Forms.Label vramLabel;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox refreshButton;
     }
 }
 

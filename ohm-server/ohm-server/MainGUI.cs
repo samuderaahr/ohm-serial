@@ -40,6 +40,8 @@ namespace ohm_server
         public string vramFree;
 
         public bool hasArduinoReset = false;
+        string[] portList;
+        bool portsDetected = false;
 
         public ServerGUI()
         {
@@ -173,9 +175,14 @@ namespace ohm_server
 
         private void COMPort_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string PortValue = ((KeyValuePair<int, string>)COMPort.SelectedItem).Value;
+           // handle re-update issue
+            try
+            {
+                string PortValue = ((KeyValuePair<int, string>)COMPort.SelectedItem).Value;
+                serialPort.PortName = PortValue;
+            }
 
-            serialPort.PortName = PortValue;
+            catch (NullReferenceException) { }
         }
 
         private void BaudRate_SelectedIndexChanged(object sender, EventArgs e)
@@ -208,19 +215,33 @@ namespace ohm_server
             Stop();
         }
 
+        private void refreshButton_Click(object sender, EventArgs e)
+        {
+            Stop();
+
+            portList = null;
+
+            detectPorts();
+        }
+
         private void StartButton_Click(object sender, EventArgs e)
         {
             try
             {
-                if (!serialPort.IsOpen)
-                    serialPort.Open();
+                if (portsDetected)
+                {
+                    if (!serialPort.IsOpen)
+                        serialPort.Open();
+                    
+                    //serialPort.WriteLine("WHATSUP MADDAFAKKA");
+                    sendOnce();
 
-                //serialPort.WriteLine("WHATSUP MADDAFAKKA");
-                sendOnce();
+                    statusPanel.Text = "Transmission Started | Port: " + serialPort.PortName + " | Baud: " + serialPort.BaudRate + " | Interval: " + intervalTimer.Interval;
 
-                statusPanel.Text = "Transmission Started | Port: " + serialPort.PortName + " | Baud: " + serialPort.BaudRate + " | Interval: " + intervalTimer.Interval;
+                    intervalTimer.Start();
+                }
 
-                intervalTimer.Start();
+                else statusPanel.Text = "Cannot start transmission. No COM ports are detected. Please click refresh";
             }
 
             catch (UnauthorizedAccessException)
@@ -252,33 +273,10 @@ namespace ohm_server
             intervalTimer.Enabled = true;
             intervalTimer.Interval = 100;
 
-            string[] ports = SerialPort.GetPortNames();
+            detectPorts();
 
-            //if no serial, program cannot continue
-            //TODO: Make serial refresh
-            if (ports == null || ports.Length == 0)
-                statusPanel.Text = "No COM Port detected. Please restart program.";
-
-            //if com port detected, assumed successful init
-            else
+            if (portsDetected)
             {
-                Dictionary<Int32, string> COMPortItems = new Dictionary<int, string>();
-                int index = 0;
-
-                foreach (string port in ports)
-                {
-                    COMPortItems.Add(index++, port);
-                }
-
-                try
-                {
-                    COMPort.DataSource = new BindingSource(COMPortItems, null);
-                    COMPort.DisplayMember = "Value";
-                    COMPort.ValueMember = "Key";
-                }
-
-                catch (ArgumentException) { }
-
                 COMPort.SelectedIndex = 0;      //first com port default
                 BaudRate.SelectedIndex = 4;     //predefined data. 57600 default
                 SendInterval.SelectedIndex = 4; //predefined data. 1000ms interval default
@@ -288,6 +286,51 @@ namespace ohm_server
                 serialPort.PortName = PortValue;
                 serialPort.BaudRate = Convert.ToInt32(BaudRate.SelectedItem.ToString());
                 intervalTimer.Interval = Convert.ToInt32(SendInterval.SelectedItem.ToString());
+            }
+        }
+
+        private void detectPorts()
+        {
+            //reinit to zero first
+            portList = null;
+            COMPort.DataSource = null;
+
+            bool success;
+            portList = SerialPort.GetPortNames();
+
+            //if no serial, program cannot continue
+            if (portList == null || portList.Length == 0)
+                success = false;
+
+            else
+            {
+                Dictionary<Int32, string> COMPortItems = new Dictionary<int, string>();
+                int index = 0;
+
+                foreach (string port in portList)
+                {
+                    COMPortItems.Add(index++, port);
+                }
+
+                try
+                {
+                    COMPort.DataSource = new BindingSource(COMPortItems, null);
+                    COMPort.DisplayMember = "Value";
+                    COMPort.ValueMember = "Key";
+
+                    success = true;
+                }
+
+                catch (ArgumentException) { success = false; }
+
+                if (success)
+                {
+                    portsDetected = true;
+                    statusPanel.Text = "Serial port list updated";
+                }
+
+                else
+                    statusPanel.Text = "No COM Port detected. Please click refresh.";
             }
         }
 
