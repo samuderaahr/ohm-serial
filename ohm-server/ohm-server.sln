@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ohm-server", "ohm-server\ohm-server.csproj", "{21D17D1D-FCE9-4142-B0CD-FF067CD8011B}"
 EndProject
 Global
@@ -11,8 +13,12 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{21D17D1D-FCE9-4142-B0CD-FF067CD8011B}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{21D17D1D-FCE9-4142-B0CD-FF067CD8011B}.Release|x86.ActiveCfg = Release|Any CPU
+		{21D17D1D-FCE9-4142-B0CD-FF067CD8011B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E49D11DF-86E5-408A-9BDB-C5FFE984F8C4}
 	EndGlobalSection
 EndGlobal
